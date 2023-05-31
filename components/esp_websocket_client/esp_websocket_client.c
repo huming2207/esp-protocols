@@ -93,6 +93,7 @@ typedef struct {
     bool                        use_global_ca_store;
     bool                        skip_cert_common_name_check;
     esp_err_t                   (*crt_bundle_attach)(void *conf);
+    esp_transport_handle_t      ext_transport;
 } websocket_config_storage_t;
 
 typedef enum {
@@ -470,7 +471,13 @@ static esp_err_t esp_websocket_client_create_transport(esp_websocket_client_hand
     client->transport_list = esp_transport_list_init();
     ESP_WS_CLIENT_MEM_CHECK(TAG, client->transport_list, return ESP_ERR_NO_MEM);
     if (strcasecmp(client->config->scheme, WS_OVER_TCP_SCHEME) == 0) {
-        esp_transport_handle_t tcp = esp_transport_tcp_init();
+        esp_transport_handle_t tcp = NULL;
+        if (client->config->ext_transport == NULL) {
+            tcp = esp_transport_tcp_init();
+        } else {
+            tcp = client->config->ext_transport;
+        }
+
         ESP_WS_CLIENT_MEM_CHECK(TAG, tcp, return ESP_ERR_NO_MEM);
 
         esp_transport_set_default_port(tcp, WEBSOCKET_TCP_DEFAULT_PORT);
@@ -489,7 +496,13 @@ static esp_err_t esp_websocket_client_create_transport(esp_websocket_client_hand
         esp_transport_list_add(client->transport_list, ws, WS_OVER_TCP_SCHEME);
         ESP_WS_CLIENT_ERR_OK_CHECK(TAG, set_websocket_transport_optional_settings(client, WS_OVER_TCP_SCHEME), return ESP_FAIL;)
     } else if (strcasecmp(client->config->scheme, WS_OVER_TLS_SCHEME) == 0) {
-        esp_transport_handle_t ssl = esp_transport_ssl_init();
+        esp_transport_handle_t ssl = NULL;
+        if (client->config->ext_transport == NULL) {
+            ssl = esp_transport_ssl_init();
+        } else {
+            ssl = client->config->ext_transport;
+        }
+
         ESP_WS_CLIENT_MEM_CHECK(TAG, ssl, return ESP_ERR_NO_MEM);
 
         esp_transport_set_default_port(ssl, WEBSOCKET_SSL_DEFAULT_PORT);
@@ -602,6 +615,7 @@ esp_websocket_client_handle_t esp_websocket_client_init(const esp_websocket_clie
     client->config->client_key_len = config->client_key_len;
     client->config->skip_cert_common_name_check = config->skip_cert_common_name_check;
     client->config->crt_bundle_attach = config->crt_bundle_attach;
+    client->config->ext_transport = config->ext_transport;
 
     if (config->uri) {
         if (esp_websocket_client_set_uri(client, config->uri) != ESP_OK) {
