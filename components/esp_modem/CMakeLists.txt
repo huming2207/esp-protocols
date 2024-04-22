@@ -42,8 +42,6 @@ set_target_properties(${COMPONENT_LIB} PROPERTIES
     CXX_EXTENSIONS ON
 )
 
-
-if(${target} STREQUAL "linux")
-    # This is needed for ESP_LOGx() macros, as integer formats differ on ESP32(..) and x64
-    set_target_properties(${COMPONENT_LIB} PROPERTIES COMPILE_FLAGS -Wno-format)
+if(CONFIG_ESP_MODEM_ADD_CUSTOM_MODULE)
+    idf_component_optional_requires(PUBLIC main)
 endif()

@@ -1,5 +1,5 @@
-version: "1.0.0"
-description: esp websocket client
+version: "1.2.3"
+description: WebSocket protocol client for ESP-IDF
 url: https://github.com/espressif/esp-protocols/tree/master/components/esp_websocket_client
 dependencies:
   idf:

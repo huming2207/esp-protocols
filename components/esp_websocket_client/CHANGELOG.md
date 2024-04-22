@@ -1,5 +1,80 @@
 # Changelog
 
+## [1.2.3](https://github.com/espressif/esp-protocols/commits/websocket-v1.2.3)
+
+### Features
+
+- Expanded example to demonstrate the transfer over TLS ([0d0630ed76](https://github.com/espressif/esp-protocols/commit/0d0630ed76))
+
+### Bug Fixes
+
+- fix esp_event dependency management ([1fb02a9a60](https://github.com/espressif/esp-protocols/commit/1fb02a9a60))
+- Skip warn on zero timeout and auto reconnect is disabled ([5b467cbf5c](https://github.com/espressif/esp-protocols/commit/5b467cbf5c))
+- Fixed to use int return value in Tx functions ([9c54b72e1f](https://github.com/espressif/esp-protocols/commit/9c54b72e1f))
+- Fixed Tx functions with DYNAMIC_BUFFER ([16174470ee](https://github.com/espressif/esp-protocols/commit/16174470ee))
+- added dependency checks, sdkconfig.defaults and refined README.md ([312982e4aa](https://github.com/espressif/esp-protocols/commit/312982e4aa))
+- Close websocket and dispatch event if server does not close within a reasonable amount of time. ([d85311880d](https://github.com/espressif/esp-protocols/commit/d85311880d))
+- Continue waiting for TCP connection to be closed ([2b092e0db4](https://github.com/espressif/esp-protocols/commit/2b092e0db4))
+
+### Updated
+
+- docs(websocket): Added README for websocket host example ([2f7c58259d](https://github.com/espressif/esp-protocols/commit/2f7c58259d))
+
+## [1.2.2](https://github.com/espressif/esp-protocols/commits/websocket-v1.2.2)
+
+### Bug Fixes
+
+- continuation after FIN in websocket client (#460) ([774d1c75e6](https://github.com/espressif/esp-protocols/commit/774d1c75e6))
+- Re-applie refs to common comps idf_component.yml ([9fe44a4504](https://github.com/espressif/esp-protocols/commit/9fe44a4504))
+
+## [1.2.1](https://github.com/espressif/esp-protocols/commits/websocket-v1.2.1)
+
+### Bug Fixes
+
+- consider failure if return value of `esp_websocket_client_send_with_exact_opcode` less than 0 ([f523b4d](https://github.com/espressif/esp-protocols/commit/f523b4d))
+- fix of return value for `esp_websocket_client_send_with_opcode` API ([ba33588](https://github.com/espressif/esp-protocols/commit/ba33588))
+
+## [1.2.0](https://github.com/espressif/esp-protocols/commits/websocket-v1.2.0)
+
+### Features
+
+- Added new API `esp_websocket_client_append_header` ([39e9725](https://github.com/espressif/esp-protocols/commit/39e9725))
+- Added new APIs to support fragmented messages transmission ([fae80e2](https://github.com/espressif/esp-protocols/commit/fae80e2))
+
+### Bug Fixes
+
+- Reference common component from IDF ([74fc228](https://github.com/espressif/esp-protocols/commit/74fc228))
+- Revert referencing protocol_examples_common from IDF ([b176d3a](https://github.com/espressif/esp-protocols/commit/b176d3a))
+- reference protocol_examples_common from IDF ([025ede1](https://github.com/espressif/esp-protocols/commit/025ede1))
+- specify override_path in example manifests ([d5e7898](https://github.com/espressif/esp-protocols/commit/d5e7898))
+- Return status code correctly on esp_websocket_client_send_with_opcode ([ac8f1de](https://github.com/espressif/esp-protocols/commit/ac8f1de))
+- Fix pytest exclusion, gitignore, and changelog checks ([2696221](https://github.com/espressif/esp-protocols/commit/2696221))
+
+## [1.1.0](https://github.com/espressif/esp-protocols/commits/websocket-v1.1.0)
+
+### Features
+
+- Added linux port for websocket ([a22391a](https://github.com/espressif/esp-protocols/commit/a22391a))
+
+### Bug Fixes
+
+- added idf_component.yml for examples ([d273e10](https://github.com/espressif/esp-protocols/commit/d273e10))
+
+## [1.0.1](https://github.com/espressif/esp-protocols/commits/websocket-v1.0.1)
+
+### Bug Fixes
+
+- esp_websocket_client client allow sending 0 byte packets ([b5177cb](https://github.com/espressif/esp-protocols/commit/b5177cb))
+- Cleaned up printf/format warnings (-Wno-format) ([e085826](https://github.com/espressif/esp-protocols/commit/e085826))
+- Added unit tests to CI + minor fix to pass it ([c974c14](https://github.com/espressif/esp-protocols/commit/c974c14))
+- Reintroduce missing CHANGELOGs ([200cbb3](https://github.com/espressif/esp-protocols/commit/200cbb3), [#235](https://github.com/espressif/esp-protocols/issues/235))
+
+### Updated
+
+- docs(common): updated component and example links ([f48d9b2](https://github.com/espressif/esp-protocols/commit/f48d9b2))
+- docs(common): improving documentation ([ca3fce0](https://github.com/espressif/esp-protocols/commit/ca3fce0))
+- Fix weird error message spacings ([8bb207e](https://github.com/espressif/esp-protocols/commit/8bb207e))
+
 ## [1.0.0](https://github.com/espressif/esp-protocols/commits/996fef7)
 
 ### Updated

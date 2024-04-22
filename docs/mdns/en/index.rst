@@ -47,6 +47,10 @@ mDNS can advertise information about network services that your device offers. E
     * ``port``: (required) network port that the service runs on
     * ``txt``: ``{var, val}`` array of strings, used to define properties for your service
 
+Please note:
+    1. Self-querying names is not supported in Espressif's mDNS library, a deliberate design choice to simplify implementation, preventing local network pollution and addressing WiFi multicast behavior)
+    2. Setting your own hostname is a prerequisite(mandatory) for advertising services or delegating other names.
+
 Example method to add a few services and different properties::
 
     void add_mdns_services()

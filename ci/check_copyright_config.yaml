@@ -29,6 +29,7 @@ DEFAULT:
 # this section sets the default license for examples and unit tests of components
 examples_and_unit_tests:
   include:
+   - 'examples/**'
    - 'components/**/examples/**'
    - 'components/**/test/**'
    - 'components/**/tests/**'
@@ -61,4 +62,3 @@ ignore:
    - 'components/esp_modem/port/linux/**'
    - 'components/asio/examples/**'
    - 'components/mdns/**/esp_system_protocols_linux/**'
-   - 'common_components/protocol_examples_common/**'

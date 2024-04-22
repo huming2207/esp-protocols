@@ -37,6 +37,10 @@ static const int CONNECT_BIT = BIT0;
 static const int GOT_DATA_BIT = BIT2;
 static const int USB_DISCONNECTED_BIT = BIT3; // Used only with USB DTE but we define it unconditionally, to avoid too many #ifdefs in the code
 
+#ifdef CONFIG_EXAMPLE_MODEM_DEVICE_CUSTOM
+esp_err_t esp_modem_get_time(esp_modem_dce_t *dce_wrap, char *p_time);
+#endif
+
 #if defined(CONFIG_EXAMPLE_SERIAL_CONFIG_USB)
 #include "esp_modem_usb_c_api.h"
 #include "esp_modem_usb_config.h"
@@ -60,7 +64,7 @@ if ((xEventGroupGetBits(event_group) & USB_DISCONNECTED_BIT) == USB_DISCONNECTED
 
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
-    ESP_LOGD(TAG, "Event dispatched from event loop base=%s, event_id=%d", base, event_id);
+    ESP_LOGD(TAG, "Event dispatched from event loop base=%s, event_id=%" PRIu32, base, event_id);
     esp_mqtt_event_handle_t event = event_data;
     esp_mqtt_client_handle_t client = event->client;
     int msg_id;
@@ -102,11 +106,11 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 static void on_ppp_changed(void *arg, esp_event_base_t event_base,
                            int32_t event_id, void *event_data)
 {
-    ESP_LOGI(TAG, "PPP state changed event %d", event_id);
+    ESP_LOGI(TAG, "PPP state changed event %" PRIu32, event_id);
     if (event_id == NETIF_PPP_ERRORUSER) {
         /* User interrupted event from esp-netif */
-        esp_netif_t *netif = event_data;
-        ESP_LOGI(TAG, "User interrupted event from netif:%p", netif);
+        esp_netif_t **p_netif = event_data;
+        ESP_LOGI(TAG, "User interrupted event from netif:%p", *p_netif);
     }
 }
 
@@ -114,7 +118,7 @@ static void on_ppp_changed(void *arg, esp_event_base_t event_base,
 static void on_ip_event(void *arg, esp_event_base_t event_base,
                         int32_t event_id, void *event_data)
 {
-    ESP_LOGD(TAG, "IP event! %d", event_id);
+    ESP_LOGD(TAG, "IP event! %" PRIu32, event_id);
     if (event_id == IP_EVENT_PPP_GOT_IP) {
         esp_netif_dns_info_t dns_info;
 
@@ -192,6 +196,9 @@ void app_main(void)
 #elif CONFIG_EXAMPLE_MODEM_DEVICE_SIM7600 == 1
     ESP_LOGI(TAG, "Initializing esp_modem for the SIM7600 module...");
     esp_modem_dce_t *dce = esp_modem_new_dev(ESP_MODEM_DCE_SIM7600, &dte_config, &dce_config, esp_netif);
+#elif CONFIG_EXAMPLE_MODEM_DEVICE_CUSTOM == 1
+    ESP_LOGI(TAG, "Initializing esp_modem with custom module...");
+    esp_modem_dce_t *dce = esp_modem_new_dev(ESP_MODEM_DCE_CUSTOM, &dte_config, &dce_config, esp_netif);
 #else
     ESP_LOGI(TAG, "Initializing esp_modem for a generic module...");
     esp_modem_dce_t *dce = esp_modem_new(&dte_config, &dce_config, esp_netif);
@@ -257,6 +264,18 @@ void app_main(void)
         return;
     }
     ESP_LOGI(TAG, "Signal quality: rssi=%d, ber=%d", rssi, ber);
+
+#ifdef CONFIG_EXAMPLE_MODEM_DEVICE_CUSTOM
+    {
+        char time[64];
+        err = esp_modem_get_time(dce, time);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "esp_modem_get_time failed with %d %s", err, esp_err_to_name(err));
+            return;
+        }
+        ESP_LOGI(TAG, "esp_modem_get_time: %s", time);
+    }
+#endif
 
 #if CONFIG_EXAMPLE_SEND_MSG
     if (esp_modem_sms_txt_mode(dce, true) != ESP_OK || esp_modem_sms_character_set(dce) != ESP_OK) {
